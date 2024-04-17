@@ -1,0 +1,20 @@
+DECLARE @url NVARCHAR(500)
+DECLARE @jsonBody NVARCHAR(MAX)
+DECLARE @response NVARCHAR(MAX)
+
+-- Define the URL of the Power Automate flow trigger
+SET @url = 'https://prod-00.westus.logic.azure.com:443/workflows/YOUR_FLOW_ID/triggers/manual/paths/invoke?api-version=2016-10-01&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=YOUR_SIGNATURE'
+
+-- Define the JSON payload to be sent
+SET @jsonBody = N'{"parameter1": "value1", "parameter2": "value2"}'
+
+-- Invoke the HTTP request to trigger the flow
+EXEC sp_OACreate 'MSXML2.ServerXMLHTTP', @Object OUT;
+EXEC sp_OAMethod @Object, 'open', NULL, 'POST', @url, false;
+EXEC sp_OAMethod @Object, 'setRequestHeader', NULL, 'Content-Type', 'application/json';
+EXEC sp_OAMethod @Object, 'send', NULL, @jsonBody;
+EXEC sp_OAGetProperty @Object, 'responseText', @response OUT;
+EXEC sp_OADestroy @Object;
+
+-- Output the response
+SELECT @response AS [Response];
