@@ -1,0 +1,23 @@
+using System;
+using System.Net.Http;
+
+public void Main()
+{
+    string url = "YOUR_FLOW_TRIGGER_URL";
+    HttpClient client = new HttpClient();
+
+    // Make the HTTP request
+    HttpResponseMessage response = client.PostAsync(url, null).Result;
+
+    // Check if the request was successful
+    if (response.IsSuccessStatusCode)
+    {
+        // Request was successful
+        Dts.TaskResult = (int)ScriptResults.Success;
+    }
+    else
+    {
+        // Request failed
+        Dts.TaskResult = (int)ScriptResults.Failure;
+    }
+}
